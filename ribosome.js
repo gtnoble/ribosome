@@ -404,7 +404,7 @@ Array.prototype.last = function() {
 
 var fs = require('fs');
 var path = require('path');
-var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 
 
 function addslashes(str) {
@@ -630,9 +630,7 @@ if (rnaopt) {
 }
 
 if (!rnaopt) {
-    var proc = exec("node " + rnafile + " " + process.argv.slice(3).join(' '));
-    proc.stdout.pipe(process.stdout);
-    proc.stderr.pipe(process.stderr);
+    var proc = spawn("node", [rnafile, ...process.argv.slice(3)], {stdio: "inherit"})
 
     proc.on('exit', function (code) {
         fs.unlinkSync(rnafile);
